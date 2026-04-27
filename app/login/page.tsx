@@ -100,7 +100,7 @@ export default function LoginPage() {
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/login`, //use env variable for API URL to enhance flexibility and security
+          '/api/login', //use env variable for API URL to enhance flexibility and security
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
