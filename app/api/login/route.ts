@@ -6,7 +6,7 @@ export async function POST(req: Request) {
 
     if (!BACKEND_URL) {
       return Response.json(
-        { error: "BACKEND_URL not set" },
+        { error: "BACKEND_URL not set 123" },
         { status: 500 }
       );
     }
