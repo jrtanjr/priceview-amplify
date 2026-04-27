@@ -1,25 +1,26 @@
+export const runtime = 'nodejs';
+
+const BACKEND_URL = process.env.BACKEND_URL || '';
+
 export async function POST(req: Request) {
   try {
-    if (!process.env.BACKEND_URL) {
+    if (!BACKEND_URL) {
+      console.log("ENV DEBUG:", process.env); // 👈 ADD THIS
       return Response.json(
         { error: "BACKEND_URL not set" },
         { status: 500 }
       );
     }
 
-    console.log("BACKEND_URL:", process.env.BACKEND_URL);
-
     const body = await req.json();
-    console.log("REQUEST BODY:", body); // 🔥 important
 
-    const res = await fetch(`${process.env.BACKEND_URL}/login`, {
+    const res = await fetch(`${BACKEND_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
 
     const text = await res.text(); // 🔥 raw response
-    console.log("BACKEND RAW RESPONSE:", text); // 🔥 important
 
     return new Response(text, {
       status: res.status,
