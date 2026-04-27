@@ -8,7 +8,8 @@ export async function GET(req: Request) {
       return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
     }
 
-    const token = req.headers.get('authorization');
+    const cookie = req.headers.get('cookie') || '';
+    const token = cookie.match(/token=([^;]+)/)?.[1];
 
     const { searchParams } = new URL(req.url);
     const symbol = searchParams.get('symbol');
@@ -19,7 +20,7 @@ export async function GET(req: Request) {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { Authorization: token }),
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
       }
     );

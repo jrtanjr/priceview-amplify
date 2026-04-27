@@ -1,14 +1,28 @@
 export const runtime = 'nodejs';
 
+function getTokenFromCookie(req: Request) {
+  const cookie = req.headers.get('cookie') || '';
+  return cookie.match(/token=([^;]+)/)?.[1];
+}
+
+function getBackendUrl() {
+  return process.env.NEXT_PUBLIC_BACKEND_URL;
+}
+
+
+// ================= GET =================
 export async function GET(req: Request) {
   try {
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const BACKEND_URL = getBackendUrl();
 
     if (!BACKEND_URL) {
       return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
     }
 
-    const token = req.headers.get('authorization');
+    // 🔥 get token from cookie
+    const token = getTokenFromCookie(req);
+
+    console.log("COOKIE TOKEN:", token);
 
     if (!token) {
       return Response.json({ error: 'No token provided' }, { status: 401 });
@@ -18,18 +32,16 @@ export async function GET(req: Request) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     const text = await res.text();
 
-    try {
-      const data = JSON.parse(text);
-      return Response.json(data, { status: res.status });
-    } catch {
-      return Response.json({ error: text }, { status: res.status });
-    }
+    return new Response(text, {
+      status: res.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
 
   } catch (err) {
     console.error('WATCHLIST GET ERROR:', err);
@@ -38,22 +50,27 @@ export async function GET(req: Request) {
 }
 
 
+// ================= POST =================
 export async function POST(req: Request) {
   try {
-    const BACKEND_URL = process.env.BACKEND_URL;
+    const BACKEND_URL = getBackendUrl();
 
     if (!BACKEND_URL) {
       return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
     }
 
-    const token = req.headers.get('authorization');
+    const token = getTokenFromCookie(req);
     const body = await req.json();
+
+    if (!token) {
+      return Response.json({ error: 'No token provided' }, { status: 401 });
+    }
 
     const res = await fetch(`${BACKEND_URL}/watchlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(token && { Authorization: token }),
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     });
@@ -74,22 +91,27 @@ export async function POST(req: Request) {
 }
 
 
+// ================= DELETE =================
 export async function DELETE(req: Request) {
   try {
-    const BACKEND_URL = process.env.BACKEND_URL;
+    const BACKEND_URL = getBackendUrl();
 
     if (!BACKEND_URL) {
       return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
     }
 
-    const token = req.headers.get('authorization');
+    const token = getTokenFromCookie(req);
     const body = await req.json();
+
+    if (!token) {
+      return Response.json({ error: 'No token provided' }, { status: 401 });
+    }
 
     const res = await fetch(`${BACKEND_URL}/watchlist`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        ...(token && { Authorization: token }),
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     });
