@@ -1,11 +1,10 @@
 export const runtime = 'nodejs';
 
-const BACKEND_URL = process.env.BACKEND_URL || '';
-
 export async function POST(req: Request) {
   try {
+    const BACKEND_URL = process.env.BACKEND_URL; // ✅ move inside
+
     if (!BACKEND_URL) {
-      console.log("ENV DEBUG:", process.env); // 👈 ADD THIS
       return Response.json(
         { error: "BACKEND_URL not set" },
         { status: 500 }
@@ -20,7 +19,7 @@ export async function POST(req: Request) {
       body: JSON.stringify(body),
     });
 
-    const text = await res.text(); // 🔥 raw response
+    const text = await res.text();
 
     return new Response(text, {
       status: res.status,
@@ -28,7 +27,6 @@ export async function POST(req: Request) {
     });
 
   } catch (err) {
-    console.error('LOGIN PROXY ERROR:', err);
     return Response.json({ error: 'Login failed' }, { status: 500 });
   }
 }
