@@ -151,7 +151,7 @@ export default function Page() {
         //   }
 
         // const data = await res.json();
-        const data = await apiFetch('/watchlist'); // using api helper with auth header
+        const data = await apiFetch('/api/watchlist'); // using api helper with auth header
         console.log("WATCHLIST DATA:", data);
 
         const stocksWithPrices = await Promise.all(
@@ -185,7 +185,7 @@ export default function Page() {
 
       try {
         // await fetch('http://3.149.137.146:3000/watchlist', {
-        await apiFetch('/watchlist', { // using api helper with auth header
+        await apiFetch('/api/watchlist', { // using api helper with auth header
           method: 'DELETE',
           // headers: { // moved to api helper
           //   'Content-Type': 'application/json',

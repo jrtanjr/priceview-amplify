@@ -90,7 +90,7 @@ export default function SignupPage() {
         localStorage.setItem('token', data.token);
 
         // Store cookie (for proxy protection)
-        document.cookie = `token=${data.token}; path=/`;
+        document.cookie = `token=${data.token}; path=/; samesite=lax`;
 
         console.log("Signup token:", data.token);
 

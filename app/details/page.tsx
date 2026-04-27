@@ -127,7 +127,7 @@ function DetailsContent() {
       //   init();
       // }, [symbol]);
         try {
-          const data = await apiFetch(`/watchlist/check?symbol=${symbol}`); // using api helper with auth header
+          const data = await apiFetch(`/api/watchlist/check?symbol=${symbol}`); // using api helper with auth header
           setTracked(data.exists);
         } catch (err) {
           console.error(err);
@@ -189,14 +189,14 @@ function DetailsContent() {
     // }
       try {
         if (tracked) {
-          await apiFetch('/watchlist', {
+          await apiFetch('/api/watchlist', {
             method: 'DELETE',
             body: JSON.stringify({ symbol }),
           });
           setTracked(false);
 
         } else {
-          await apiFetch('/watchlist', {
+          await apiFetch('/api/watchlist', {
             method: 'POST',
             body: JSON.stringify({ symbol }),
           });

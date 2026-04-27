@@ -118,8 +118,8 @@ export default function LoginPage() {
         // Store token (API usage)
         localStorage.setItem('token', data.token);
 
-        // Store cookie (for proxy protection)
-        document.cookie = `token=${data.token}; path=/`;
+        // Store cookie for middleware (for proxy protection)
+        document.cookie = `token=${data.token}; path=/; samesite=lax`;
 
         console.log("Login token:", data.token);
 
