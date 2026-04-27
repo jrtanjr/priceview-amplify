@@ -1,14 +1,25 @@
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   try {
+    const BACKEND_URL = process.env.BACKEND_URL;
+
+    if (!BACKEND_URL) {
+      return Response.json(
+        { error: "BACKEND_URL not set" },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
 
-    const res = await fetch(`${process.env.BACKEND_URL}/signup`, {
+    const res = await fetch(`${BACKEND_URL}/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
 
-    const text = await res.text(); // 👈 capture raw response
+    const text = await res.text();
     console.log("BACKEND RESPONSE:", text);
 
     try {

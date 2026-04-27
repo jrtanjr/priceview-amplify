@@ -1,20 +1,28 @@
+export const runtime = 'nodejs';
+
 export async function GET(req: Request) {
   try {
+    const BACKEND_URL = process.env.BACKEND_URL;
+
+    if (!BACKEND_URL) {
+      return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
+    }
+
     const token = req.headers.get('authorization');
 
     if (!token) {
       return Response.json({ error: 'No token provided' }, { status: 401 });
     }
 
-    const res = await fetch(`${process.env.BACKEND_URL}/watchlist`, {
+    const res = await fetch(`${BACKEND_URL}/watchlist`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token, // 🔥 IMPORTANT
+        Authorization: token,
       },
     });
 
-    const text = await res.text(); // debug raw response
+    const text = await res.text();
 
     try {
       const data = JSON.parse(text);
@@ -32,10 +40,16 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const BACKEND_URL = process.env.BACKEND_URL;
+
+    if (!BACKEND_URL) {
+      return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
+    }
+
     const token = req.headers.get('authorization');
     const body = await req.json();
 
-    const res = await fetch(`${process.env.BACKEND_URL}/watchlist`, {
+    const res = await fetch(`${BACKEND_URL}/watchlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,8 +58,14 @@ export async function POST(req: Request) {
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
-    return Response.json(data, { status: res.status });
+    const text = await res.text();
+
+    try {
+      const data = JSON.parse(text);
+      return Response.json(data, { status: res.status });
+    } catch {
+      return Response.json({ error: text }, { status: res.status });
+    }
 
   } catch (err) {
     console.error('WATCHLIST POST ERROR:', err);
@@ -56,10 +76,16 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const BACKEND_URL = process.env.BACKEND_URL;
+
+    if (!BACKEND_URL) {
+      return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
+    }
+
     const token = req.headers.get('authorization');
     const body = await req.json();
 
-    const res = await fetch(`${process.env.BACKEND_URL}/watchlist`, {
+    const res = await fetch(`${BACKEND_URL}/watchlist`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -68,8 +94,14 @@ export async function DELETE(req: Request) {
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
-    return Response.json(data, { status: res.status });
+    const text = await res.text();
+
+    try {
+      const data = JSON.parse(text);
+      return Response.json(data, { status: res.status });
+    } catch {
+      return Response.json({ error: text }, { status: res.status });
+    }
 
   } catch (err) {
     console.error('WATCHLIST DELETE ERROR:', err);
