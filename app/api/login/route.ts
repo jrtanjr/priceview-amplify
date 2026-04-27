@@ -2,7 +2,7 @@ export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
-    const BACKEND_URL = process.env.BACKEND_URL;
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     console.log("BACKEND_URL:", BACKEND_URL);
 

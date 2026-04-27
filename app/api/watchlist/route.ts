@@ -2,7 +2,7 @@ export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
   try {
-    const BACKEND_URL = process.env.BACKEND_URL;
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     if (!BACKEND_URL) {
       return Response.json({ error: 'BACKEND_URL not set' }, { status: 500 });
