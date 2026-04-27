@@ -4,9 +4,11 @@ export async function POST(req: Request) {
   try {
     const BACKEND_URL = process.env.BACKEND_URL; // ✅ move inside
 
+    console.log(BACKEND_URL)
+    
     if (!BACKEND_URL) {
       return Response.json(
-        { error: "BACKEND_URL not set 123" },
+        { error: "BACKEND_URL not set 123"},
         { status: 500 }
       );
     }
